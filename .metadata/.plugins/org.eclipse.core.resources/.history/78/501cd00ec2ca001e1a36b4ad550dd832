@@ -195,13 +195,6 @@ public class QueryUtility {
 	}
 	
 	
-	public static boolean createTask(Task task) {
-		boolean isSuccessful = false;
-		
-		return isSuccessful;
-		
-	} 
-	
 	
 	
 
