@@ -1,0 +1,26 @@
+package com.isaiah.main;
+
+import com.isaiah.utilities.*;
+import java.sql.*;
+
+
+public class TestMain {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+
+		//Connection conn = DatabaseUtility.getTaskManagementConnection();
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = st.executeQuery("Select * from user_info");
+			
+			
+		}catch (SQLException sqle) {
+			System.err.println("An issue occurred getting the database connection");
+		}
+		
+
+	}
+
+}

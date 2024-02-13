@@ -1,0 +1,13 @@
+/*
+ * Object to hold task information from task_info table
+ */
+
+/*
+ * 
+ */
+
+package com.isaiah.objects;
+
+public class Task {
+
+}

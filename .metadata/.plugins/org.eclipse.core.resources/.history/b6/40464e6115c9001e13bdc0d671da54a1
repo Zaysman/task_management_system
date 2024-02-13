@@ -1,0 +1,28 @@
+/*
+ * The purpose of this utility class is to handle 
+ */
+
+package com.isaiah.utilities;
+
+
+
+import java.sql.*;
+
+
+
+public class QueryUtility {
+
+	
+	public static ResultSet getAllUsers() {
+		ResultSet rs = null;
+		
+		
+		
+		
+		
+		return rs;
+	}
+	
+	
+	
+}

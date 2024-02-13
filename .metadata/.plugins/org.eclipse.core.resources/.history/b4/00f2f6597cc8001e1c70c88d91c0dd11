@@ -1,0 +1,23 @@
+package com.isaiah.main;
+
+import com.isaiah.utilities.*;
+import java.sql.*;
+
+
+public class TestMain {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+
+		//Connection conn = DatabaseUtility.getTaskManagementConnection();
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+		}catch (SQLException sqle) {
+			System.err.println("An issue occurred getting the database connection");
+		}
+		
+
+	}
+
+}

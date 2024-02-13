@@ -1,0 +1,33 @@
+/*
+ * User object to hold data from DB
+ */
+
+/*
+ * Table info:
+ * create table user_login (
+ * user_id int auto_increment primary key, 
+ * username varchar(25), 
+ * password varchar(25)
+);
+
+ */
+
+package com.isaiah.objects;
+
+public class User {
+
+	private int id;
+	private String username, password;
+
+	
+	public User() {
+		
+	}
+	
+	public User(int id, String username, String password) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
+	
+}

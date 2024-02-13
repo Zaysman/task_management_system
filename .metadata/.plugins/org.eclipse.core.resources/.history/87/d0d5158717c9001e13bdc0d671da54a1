@@ -1,0 +1,51 @@
+/*
+ * The purpose of this utility class is to handle 
+ */
+
+package com.isaiah.utilities;
+
+import com.isaiah.objects.*;
+
+
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
+
+
+
+public class QueryUtility {
+
+	DatabaseUtility dbutil;
+	
+	
+	public static LinkedList<User> getAllUsers() {
+		LinkedList<User> users = new LinkedList<>();
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			Statement st =  conn.createStatement();
+			ResultSet rs = st.executeQuery("select * from user_login;");
+			int numCols = rs.getMetaData().getColumnCount();
+			
+			for(int i = 1; i <= numCols; i++) {
+				User user = new User();
+				user.setId(rs.getInt(1));
+				
+			}
+		
+			
+		} catch (SQLException sqle) {
+			System.err.println("An issue has occured with getting the connection to the DB: \n" +
+					sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+		
+		
+		
+		return users;
+	}
+	
+	
+	
+}
