@@ -351,10 +351,6 @@ public class QueryUtility {
 
 		return tasks;
 	}
-	
-	public static LinkedList<Task> getTasksByUser(User user) {
-		return getTasksByOwnerId(user.getId());
-	}
 
 
 	public static boolean updateTaskById(int id, Task task) {

@@ -69,6 +69,8 @@ public class TestDBQueries {
 		}
 		
 		testTask.setTask_description("This is an updated task description");
+		testTask.setTask_instance_id(4);
+		testTask.setTask_id(6);
 		updateTaskSuccessful = qUtil.updateTask(testTask);
 		
 		deleteTaskSuccessful = qUtil.deleteTask(testTask);
