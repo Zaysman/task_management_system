@@ -1,0 +1,57 @@
+package com.isaiah.main;
+
+import com.isaiah.objects.*;
+import com.isaiah.utilities.QueryUtility;
+
+public class TestDBQueries {
+	
+	static QueryUtility qUtil;
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		System.out.println("Testing The QueryUtility Class");
+
+		System.out.println("Testing User Related CRUD Operations");
+		User testUser = new User("TestDBQueries", "password");
+		
+		boolean createUserSuccessful, readUserSuccessful, updateUserSuccessful, deleteUserSuccessful;
+		
+		createUserSuccessful = qUtil.createUser(testUser);
+		
+		String testUsername = testUser.getUsername();
+		testUser = null;
+		
+		testUser = qUtil.getUserByUsername(testUsername);
+		
+		if(testUser != null) {
+			readUserSuccessful = true;
+		} else {
+			readUserSuccessful = false;
+		}
+		
+		
+		
+		
+		
+
+
+	}
+
+	public static void printLineBreak() {
+
+		for(int i = 0; i < 200; i++) {
+			System.out.print("-");
+		}
+		System.out.println();
+	}
+
+	public static void printLineBreak(int dashes) {
+
+		for(int i = 0; i < dashes; i++) {
+			System.out.print("-");
+		}
+		System.out.println();
+	}
+
+}
