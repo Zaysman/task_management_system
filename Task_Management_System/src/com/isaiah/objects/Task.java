@@ -30,7 +30,7 @@ public class Task {
 	private LocalDateTime task_start_time, task_end_time, task_due_date;
 	
 	public Task() {
-		super();
+		this(-1, 0, 1, "default task name", "in progress", "Default Description", "Default Location", LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now());
 	}
 
 	public Task(int task_id, int task_instance_id, int owner_user_id, String task_name, String task_status, String task_description, String task_location, LocalDateTime task_start_time, LocalDateTime task_end_time, LocalDateTime task_due_date) {

@@ -21,7 +21,11 @@ public class User {
 
 	
 	public User() {
-		this(0, "default username", "default password");
+		this(-1, "default username", "default password");
+	}
+	
+	public User(String username, String password) {
+		this(-1, username, password);
 	}
 	
 	public User(int id, String username, String password) {

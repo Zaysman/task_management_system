@@ -1,0 +1,351 @@
+/*
+ * The purpose of this utility class is to handle 
+ */
+
+package com.isaiah.utilities;
+
+import com.isaiah.objects.*;
+
+
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
+
+
+
+public class QueryUtility {
+
+
+	
+	public static boolean createUser(User user) {
+		boolean isSuccessful = false;
+
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement preparedStatement = conn.prepareStatement("insert into user_login (username, password) values (?, ?);");
+			preparedStatement.setString(1, user.getUsername());
+			preparedStatement.setString(2, user.getPassword());
+						
+			int rowsAffected = preparedStatement.executeUpdate();
+			
+			
+			//check the number of rows affected.
+			if(rowsAffected > 0) {
+				System.out.println("Record inserted successfully");
+				isSuccessful = true;
+			} else {
+				System.out.println("Failed to insert record.");
+				
+			}
+			
+			
+		} catch(SQLException sqle) {
+			System.err.println("An issue has occurred adding a user to the DB:" + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+		
+		
+		return isSuccessful;
+	}
+	
+	
+	public static LinkedList<User> getAllUsers() {
+		LinkedList<User> users = new LinkedList<>();
+
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+
+			Statement st =  conn.createStatement();
+			ResultSet rs = st.executeQuery("select * from user_login;");
+			int numCols = rs.getMetaData().getColumnCount();
+
+			while(rs.next()) {
+				User user = new User();
+				user.setId(rs.getInt(1));
+				user.setUsername(rs.getString(2));
+				user.setPassword(rs.getString(3));
+				users.add(user);
+			}
+
+
+		} catch (SQLException sqle) {
+			System.err.println("An issue has occured with retrieving all users from the DB:" + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+
+
+
+		return users;
+	}
+
+	public static User getUserById(int id) {
+		User user = new User();
+
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("select * from user_login where user_id= " + id);
+
+			while(rs.next()) {
+				user.setId(rs.getInt(1));
+				user.setUsername(rs.getString(2));
+				user.setPassword(rs.getString(3));
+			}
+
+
+		} catch (SQLException sqle) {
+			System.err.println("An issue has occured with retrieving user by id from the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace" );
+			sqle.printStackTrace();
+		}
+
+
+
+		return user;
+	}
+	
+	public static User getUserByUsername(String username) {
+		User user = new User();
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("select * from user_login where username = \'" + username + "\'");
+
+			while(rs.next()) {
+				user.setId(rs.getInt(1));
+				user.setUsername(rs.getString(2));
+				user.setPassword(rs.getString(3));
+			}
+
+
+		} catch (SQLException sqle) {
+			System.err.println("An issue has occured with retrieving user by username from the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace" );
+			sqle.printStackTrace();
+		}
+		
+		
+		return user;
+	}
+	
+	public static User getUser(User user) {
+		return getUserById(user.getId());
+	}
+
+	public static boolean updateUserById(int id, User update) {
+		boolean isSuccessful = false;
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			PreparedStatement pSt = conn.prepareStatement("UPDATE user_login SET username = ?, password = ? where user_id = ?");
+			
+			pSt.setString(1, update.getUsername());
+			pSt.setString(2, update.getPassword());
+			pSt.setInt(3, id);
+			
+			int rowsAffected = pSt.executeUpdate();
+			
+			if(rowsAffected > 0) {
+				isSuccessful = true;
+			} else {
+				isSuccessful = false;
+			}
+			
+		
+			
+		}catch(SQLException sqle) {
+			System.err.println("An issue has occurred updating a user in the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+		
+		
+		return isSuccessful;
+	}
+	
+	public static boolean updateUser(User update) {
+		
+		return updateUserById(update.getId(), update);
+		
+	}
+	
+	public static boolean deleteUserById(int id) {
+		boolean isSuccessful = false;
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement pst = conn.prepareStatement("Delete From user_login where user_id = ?");
+			pst.setInt(1, id);
+			
+			int rowsAffected = pst.executeUpdate();
+			
+			if(rowsAffected > 0) {
+				isSuccessful = true;
+			} else {
+				isSuccessful = false;
+			}
+			
+			
+		} catch(SQLException sqle) {
+			System.err.println("An issue has occurred deleting a user from the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+		
+		return isSuccessful;
+	}
+	
+	public static boolean deleteUser(User delete) {
+		
+		return deleteUserById(delete.getId());
+	}
+	
+	
+	public static boolean createTask(Task task) {
+		boolean isSuccessful = false;
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement pst = conn.prepareStatement("insert into task_info (task_instance_id, task_name, task_start_time, task_end_time, task_due_date, task_status, task_description, task_location, owner_user_id) values (? ,?, ?, ?, ?, ?, ?, ?, ?)");
+			pst.setInt(1, task.getTask_instance_id());
+			pst.setString(2, task.getTask_name());
+			pst.setObject(3, task.getTask_start_time());
+			pst.setObject(4, task.getTask_end_time());
+			pst.setObject(5, task.getTask_due_date());
+			pst.setObject(6, task.getTask_status());
+			pst.setObject(7, task.getTask_description());
+			pst.setObject(8, task.getTask_location());
+			pst.setInt(9, task.getOwner_user_id());
+			
+			
+			int rowsAffected = pst.executeUpdate();
+			
+			if(rowsAffected > 0) {
+				isSuccessful = true;
+			} else {
+				isSuccessful = false;
+			}
+			
+			
+		} catch(SQLException sqle) {
+			System.err.println("An issue has occurred adding a task to the DB:" + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+		
+		
+		return isSuccessful;
+	} 
+	
+	public static Task getTaskById(int id) {
+		Task task = new Task();
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement pst = conn.prepareStatement("select * from task_info where task_id = ?");
+			
+			pst.setInt(1, id);
+		
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				task.setTask_id(rs.getInt(1));
+				task.setTask_instance_id(rs.getInt(2));
+				task.setTask_name(rs.getString(3));
+				task.setTask_start_time((LocalDateTime) rs.getObject(4));
+				task.setTask_end_time((LocalDateTime) rs.getObject(5));
+				task.setTask_due_date((LocalDateTime) rs.getObject(6));
+				task.setTask_status(rs.getString(7));
+				task.setTask_description(rs.getString(8));
+				task.setTask_location(rs.getString(9));
+				task.setOwner_user_id(rs.getInt(10));
+			}
+			
+			
+			
+			
+		}catch(SQLException sqle) {
+			System.err.println("An issue has occured with retrieving a task by id from the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace" );
+			sqle.printStackTrace();
+		}
+		
+		
+		return task;
+	}
+	
+	public static boolean updateTaskById(int id, Task task) {
+		boolean isSuccessful = false;
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement pst = conn.prepareStatement("update task_info SET task_instance_id = ?, task_start_time = ?, task_end_time = ?, task_due_date = ?, task_status = ?, task_description = ?, task_location = ?, owner_user_id = ?  where task_id = ?");
+			
+			pst.setInt(1, task.getTask_instance_id());
+			pst.setObject(2, task.getTask_start_time());
+			pst.setObject(3, task.getTask_end_time());
+			pst.setObject(4, task.getTask_due_date());
+			pst.setString(5, task.getTask_status());
+			pst.setString(6, task.getTask_description());
+			pst.setString(7, task.getTask_location());
+			pst.setInt(8, task.getOwner_user_id());
+			pst.setInt(9, id);
+			
+			int rowsAffected = pst.executeUpdate();
+			
+			if(rowsAffected > 0) {
+				isSuccessful = true;
+			} else {
+				isSuccessful = false;
+			}
+			
+		} catch(SQLException sqle) {
+			System.err.println("An issue has occurred updating a task by id in the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+		
+		
+		return isSuccessful;
+	}
+	
+	public static boolean updateTask(Task task) {
+		return updateTaskById(task.getTask_id(), task);
+	}
+	
+	public static boolean deleteTaskById(int id) {
+		boolean isSuccessful = false;
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement pst = conn.prepareStatement("delete from task_info where task_id = ?");
+			pst.setInt(1, id);
+			
+			int rowsAffected = pst.executeUpdate();
+			
+			if(rowsAffected > 0) {
+				isSuccessful = true;
+			} else {
+				isSuccessful = false;
+			}
+			
+			
+		} catch(SQLException sqle) {
+			System.err.println("An issue has occurred deleting a task from the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+		}
+		
+		
+		return isSuccessful;
+	}
+	
+	public static boolean deleteTask(Task task) {
+		return deleteTaskById(task.getTask_id());
+	}
+	
+
+	
+	
+
+}
