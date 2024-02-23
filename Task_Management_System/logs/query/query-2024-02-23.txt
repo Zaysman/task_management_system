@@ -1,0 +1,8 @@
+test message
+This should come after whatever was written after what was already 
+[17:38:33.449633400]test message
+[17:38:33.449633400]This should come after whatever was written after what was already 
+[17:38:46.476597800]test message
+[17:38:46.477597600]This should come after whatever was written after what was already 
+[17:39:02.056757200]test message
+[17:39:02.056757200]This should come after whatever was written after what was already 
