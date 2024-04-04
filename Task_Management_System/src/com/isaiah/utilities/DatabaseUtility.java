@@ -34,11 +34,16 @@ public class DatabaseUtility {
 		
 		try {
 			conn = DriverManager.getConnection(dbUrl+dbName, props.getProperty("username"), props.getProperty("password"));
+			LogWriterUtility.writeToDBLogFile("Connection Established to " + dbName);
 			
 		} catch(SQLException sqle) {
 			System.err.println("An issue has occured with getting the connection to the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace");
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToDBLogFile("An issue has occured with getting the connection to the DB: " + sqle.getMessage() + "\n" 
+			+ "Printing Stack Trace\n" + sqle.getStackTrace().toString());
+			
 			
 		}
 		

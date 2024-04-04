@@ -1,0 +1,79 @@
+package com.isaiah.utilities;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.LocalDateTime;
+
+import java.io.IOException;
+
+public class LogWriterUtility {
+	
+	final static private Path LogDirectory = Paths.get("logs//");
+	final static private Path DatabaseLogDirectory = LogDirectory.resolve("database//");
+	final static private Path QueryLogDirectory = LogDirectory.resolve("query//");
+	
+	
+	
+	public static void createDBLogDirectory() {
+		Path dbLogDir = DatabaseLogDirectory;
+		
+		try {
+			Files.createDirectory(dbLogDir);
+			
+		} catch(IOException ioe) {
+			System.err.println("The database log file for today, " + LocalDate.now() + " ,was not created");
+			ioe.printStackTrace();
+		}
+	}
+	
+	public static void createQueryLogDirectory() {
+		Path queryLogDir = QueryLogDirectory;
+		
+		try {
+			Files.createDirectory(queryLogDir);
+		
+		} catch(IOException ioe) {
+			System.err.println("The query log file for today, " + LocalDate.now() + " ,was not created");
+			ioe.printStackTrace();
+		}
+	}
+	
+	public static void createDBLogFile() {
+		//Sample DBLogFileName: Database-2024-02-23
+		String todayFileName = "Database-" + LocalDate.now().toString() + ".txt";
+		Path TodayDBFilepath = DatabaseLogDirectory.resolve(todayFileName);
+		
+		try {
+			Files.createDirectory(TodayDBFilepath);
+		
+		} catch(IOException ioe) {
+			System.err.println("The file for today, " + LocalDate.now() + " ,was not created");
+			ioe.printStackTrace();
+		}
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		System.out.println(Instant.now());
+		
+		LocalDate currDate = LocalDate.now();
+		LocalTime currTime = LocalTime.now();
+		LocalDateTime currDateTime = LocalDateTime.now();
+		
+		System.out.println("currDate: " + currDate.toString() + "\n"
+				+ "currTime: " + currTime + "\n" 
+				+ "currDateTime: " + currDateTime);
+		
+		//createDBLogFile();
+		
+		createDBLogDirectory();
+	}
+	
+	
+
+}

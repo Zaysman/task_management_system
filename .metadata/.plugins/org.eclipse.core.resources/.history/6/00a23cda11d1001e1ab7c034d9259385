@@ -1,0 +1,11 @@
+package com.isaiah.utilities;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class LogWriterUtility {
+	
+	final static Path LogDirectory = Paths.get("logs/");
+	final static Path DatabaseDirectory = Paths.get(LogDirectory + "database");
+
+}

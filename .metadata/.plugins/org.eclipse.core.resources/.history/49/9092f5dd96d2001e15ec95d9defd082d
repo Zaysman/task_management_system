@@ -1,0 +1,134 @@
+package com.isaiah.utilities;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.LocalDateTime;
+
+import java.io.IOException;
+
+public class LogWriterUtility {
+
+	final static private Path LogDirectory = Paths.get("logs//");
+	final static private Path DatabaseLogDirectory = LogDirectory.resolve("database//");
+	final static private Path QueryLogDirectory = LogDirectory.resolve("query//");
+
+
+	public static void createLogDirectory() {
+		Path logDir = LogDirectory;
+
+		if(!Files.exists(logDir)) {
+			try {
+				Files.createDirectory(logDir);
+
+			} catch(IOException ioe) {
+				System.err.println("The  log file directory for today, " + LocalDate.now() + " ,was not created");
+				ioe.printStackTrace();
+			}
+		}
+	}
+
+
+	public static void createDBLogDirectory() {
+		Path dbLogDir = DatabaseLogDirectory;
+
+		if(!Files.exists(dbLogDir)) {
+
+			try {
+				Files.createDirectory(dbLogDir);
+
+			} catch(IOException ioe) {
+				System.err.println("The database log directory for was not created");
+				ioe.printStackTrace();
+			}
+		}
+	}
+
+	public static void createQueryLogDirectory() {
+		Path queryLogDir = QueryLogDirectory;
+
+		if(!Files.exists(queryLogDir)) {
+
+			try {
+				Files.createDirectory(queryLogDir);
+
+			} catch(IOException ioe) {
+				System.err.println("The query directory was not created");
+				ioe.printStackTrace();
+			}
+		}
+	}
+
+	public static void createDBLogFile() {
+		//Sample DBLogFileName: Database-2024-02-23
+		String todayFileName = "database-" + getDateandFileExtenstion();
+		Path TodayDBFilepath = DatabaseLogDirectory.resolve(todayFileName);
+
+		if(!Files.exists(TodayDBFilepath)) {
+
+			try {
+				Files.createFile(TodayDBFilepath);
+
+			} catch(IOException ioe) {
+				System.err.println("The database log file for today, " + LocalDate.now() + " ,was not created");
+				ioe.printStackTrace();
+			}
+
+		}
+	}
+	
+	public static void createQueryLogFile() {
+		String todayFileName = "query-" + getDateandFileExtenstion();
+		Path todayQueryFilePath = QueryLogDirectory.resolve(todayFileName);
+		
+		if(!Files.exists(todayQueryFilePath)) {
+			
+			try {
+				Files.createFile(todayQueryFilePath);
+				
+			} catch(IOException ioe) {
+				System.err.println("The query log file for today, " + LocalDate.now() + " ,was not created");
+				ioe.printStackTrace();
+			}
+			
+		}
+	}
+	
+	
+	public static String getDateandFileExtenstion() {
+		return LocalDate.now().toString() + ".txt";
+	}
+
+
+	public static void writeToDBLogFile(String str) {
+		Path todayLogFile = Paths.get(DatabaseLogDirectory.toString() + "database-" + getDateandFileExtenstion());
+		System.out.println("todayLogFile: " + todayLogFile);
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(Instant.now());
+
+		LocalDate currDate = LocalDate.now();
+		LocalTime currTime = LocalTime.now();
+		LocalDateTime currDateTime = LocalDateTime.now();
+
+		System.out.println("currDate: " + currDate.toString() + "\n"
+				+ "currTime: " + currTime + "\n" 
+				+ "currDateTime: " + currDateTime);
+
+		createDBLogFile();
+		createDBLogDirectory();
+		createQueryLogDirectory();
+		createQueryLogFile();
+		
+		writeToDBLogFile("test message");
+	}
+	
+	
+
+
+
+}

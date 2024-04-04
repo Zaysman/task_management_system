@@ -1,0 +1,9 @@
+package com.isaiah.utilities;
+
+import java.io.Path;
+
+public class LogWriterUtility {
+	
+	final static Path
+
+}

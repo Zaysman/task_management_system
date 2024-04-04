@@ -34,16 +34,25 @@ public class QueryUtility {
 			if(rowsAffected > 0) {
 				System.out.println("Record inserted successfully");
 				isSuccessful = true;
+				LogWriterUtility.writeToQueryLogFile("User Record inserted successfully\n" + 
+				"User: " + user.toString());
 			} else {
 				System.out.println("Failed to insert record.");
+				LogWriterUtility.writeToQueryLogFile("Failed to insert User Record Successfully\n" +
+				"User: " + user.toString());
 
 			}
+			
+			
 
 
 		} catch(SQLException sqle) {
 			System.err.println("An issue has occurred adding a user to the DB:" + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occurred adding a user to the DB:" + sqle.getMessage() + "\n" 
+			+ "Printing Stack Trace\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -65,6 +74,7 @@ public class QueryUtility {
 			Statement st =  conn.createStatement();
 			ResultSet rs = st.executeQuery("select * from user_login;");
 			int numCols = rs.getMetaData().getColumnCount();
+			
 
 			while(rs.next()) {
 				User user = new User();
@@ -73,12 +83,17 @@ public class QueryUtility {
 				user.setPassword(rs.getString(3));
 				users.add(user);
 			}
+			
+			LogWriterUtility.writeToQueryLogFile("All Users successfully retrieved from DB");
 
 
 		} catch (SQLException sqle) {
 			System.err.println("An issue has occured with retrieving all users from the DB:" + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with retrieving all users from the DB:" + sqle.getMessage() +"\n" +
+			"Printing Stack Trace\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -98,12 +113,16 @@ public class QueryUtility {
 				user.setUsername(rs.getString(2));
 				user.setPassword(rs.getString(3));
 			}
+			
+		LogWriterUtility.writeToQueryLogFile("User successfully retrieved from DB by ID.\n" + user.toString());
 
 
 		} catch (SQLException sqle) {
 			System.err.println("An issue has occured with retrieving user by id from the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace" );
 			sqle.printStackTrace();
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with retrieving user by id from the DB: " + sqle.getMessage() +"\n" +
+			"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -117,18 +136,23 @@ public class QueryUtility {
 		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery("select * from user_login where username = \'" + username + "\'");
-
+			
 			while(rs.next()) {
 				user.setId(rs.getInt(1));
 				user.setUsername(rs.getString(2));
 				user.setPassword(rs.getString(3));
 			}
+			
+			LogWriterUtility.writeToQueryLogFile("User successfully retrieved from DB by username.\n" + user.toString());
 
 
 		} catch (SQLException sqle) {
 			System.err.println("An issue has occured with retrieving user by username from the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with retrieving user by username from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -141,6 +165,7 @@ public class QueryUtility {
 
 	public static boolean updateUserById(int id, User update) {
 		boolean isSuccessful = false;
+		LogWriterUtility.writeToQueryLogFile("User before update:\n" + update.toString());
 
 		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
 			PreparedStatement pSt = conn.prepareStatement("UPDATE user_login SET username = ?, password = ? where user_id = ?");
@@ -157,12 +182,17 @@ public class QueryUtility {
 				isSuccessful = false;
 			}
 
+			LogWriterUtility.writeToQueryLogFile("User successfully updated in DB by ID.\n" + "User after Update:\n" + update.toString());
+			
 
 
 		}catch(SQLException sqle) {
 			System.err.println("An issue has occurred updating a user in the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with updating user by id from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -187,15 +217,22 @@ public class QueryUtility {
 
 			if(rowsAffected > 0) {
 				isSuccessful = true;
+				LogWriterUtility.writeToQueryLogFile("Deleting User from DB successful.");
 			} else {
 				isSuccessful = false;
+				LogWriterUtility.writeToQueryLogFile("Deleting User from DB unsuccessful.");
 			}
 
+			
+			
 
 		} catch(SQLException sqle) {
 			System.err.println("An issue has occurred deleting a user from the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with deleting user by id from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 		return isSuccessful;
@@ -206,6 +243,34 @@ public class QueryUtility {
 		return deleteUserById(delete.getId());
 	}
 
+	
+	public static int getTaskIdAutoIncrementVal() {
+		int val = 0;
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement pst = conn.prepareStatement("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'task_management' AND TABLE_NAME = 'task_info';");
+			
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				val = rs.getInt(1);
+			}
+			LogWriterUtility.writeToQueryLogFile("Successfully acquired TaskID AutoIncrement Value: " + val);
+			
+			
+		} catch(SQLException sqle) {
+			System.err.println("An issue has occurred getting the AutoIncrement value from the DB: " + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n");
+			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with acquiring Task ID AutoIncrement Value from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
+		}
+		
+		return val;
+	}
+	
 
 	public static boolean createTask(Task task) {
 		boolean isSuccessful = false;
@@ -228,8 +293,13 @@ public class QueryUtility {
 
 			if(rowsAffected > 0) {
 				isSuccessful = true;
+				LogWriterUtility.writeToQueryLogFile("Successfully created Task in DB:\n" +
+						task.toString());
+				
 			} else {
 				isSuccessful = false;
+				LogWriterUtility.writeToQueryLogFile("Unsuccessfully created Task in DB:\n" +
+						task.toString());
 			}
 
 
@@ -237,6 +307,9 @@ public class QueryUtility {
 			System.err.println("An issue has occurred adding a task to the DB:" + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with creating Task in the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -268,11 +341,17 @@ public class QueryUtility {
 
 				tasks.add(t);
 			}
+			
+			LogWriterUtility.writeToQueryLogFile("Successfully retrieved all tasks from Database");
+			
 
 		} catch(SQLException sqle) {
 			System.err.println("An issue has occured with retrieving all tasks from the DB:" + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with creating Task in the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -303,6 +382,8 @@ public class QueryUtility {
 				task.setOwner_user_id(rs.getInt(10));
 			}
 
+			LogWriterUtility.writeToQueryLogFile("Task successfully retrieved from DB by ID.\n" + task.toString());
+			
 
 
 
@@ -310,6 +391,9 @@ public class QueryUtility {
 			System.err.println("An issue has occured with retrieving a task by id from the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with retrieving Task from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -342,11 +426,16 @@ public class QueryUtility {
 
 				tasks.add(t);
 			}
+			
+			LogWriterUtility.writeToQueryLogFile("Successfully acquired all tasks by Owner ID: " + id);
 
 		} catch(SQLException sqle) {
 			System.err.println("An issue has occured with retrieving all tasks from the DB:" + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with retrieving all Tasks from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 		return tasks;
@@ -355,14 +444,57 @@ public class QueryUtility {
 	public static LinkedList<Task> getTasksByUser(User user) {
 		return getTasksByOwnerId(user.getId());
 	}
+	
+	public static LinkedList<Task> getTasksByStatusForUser(User user, String status) {
+		LinkedList<Task> tasks = new LinkedList<>();
+		
+		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
+			
+			PreparedStatement pSt = conn.prepareStatement("select * from task_info where owner_user_id = ? and task_status = ?");
+			pSt.setInt(1, user.getId());
+			pSt.setString(2, status);
+			
+			ResultSet rs = pSt.executeQuery();
+			
+			while(rs.next()) {
+				Task t = new Task();
+				
+				t.setTask_id(rs.getInt(1));
+				t.setTask_instance_id(rs.getInt(2));
+				t.setTask_name(rs.getString(3));
+				t.setTask_start_time((LocalDateTime) rs.getObject(4));
+				t.setTask_end_time((LocalDateTime) rs.getObject(5));
+				t.setTask_due_date((LocalDateTime) rs.getObject(6));
+				t.setTask_status(rs.getString(7));
+				t.setTask_description(rs.getString(8));
+				t.setTask_location(rs.getString(9));
+				t.setOwner_user_id(rs.getInt(10));
+
+				tasks.add(t);
+			}
+			
+			LogWriterUtility.writeToQueryLogFile("Successfully retrieved tasks by status '" + status + "' for User: " + user.getId());
+			
+		} catch(SQLException sqle) {
+			System.err.println("An issue has occured with retrieving tasks from the DB:" + sqle.getMessage());
+			System.err.println("Printing Stack Trace\n" );
+			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with retrieving Tasks by status '" + status +"' for user: " + user.getId() + " from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
+		}
+		
+		
+		return tasks;
+	}
 
 
 	public static boolean updateTaskById(int id, Task task) {
 		boolean isSuccessful = false;
-
+		
 		try(Connection conn = DatabaseUtility.getTaskManagementConnection()) {
 
-			PreparedStatement pst = conn.prepareStatement("update task_info SET task_instance_id = ?, task_start_time = ?, task_end_time = ?, task_due_date = ?, task_status = ?, task_description = ?, task_location = ?, owner_user_id = ?  where task_id = ?");
+			PreparedStatement pst = conn.prepareStatement("update task_info SET task_instance_id = ?, task_start_time = ?, task_end_time = ?, task_due_date = ?, task_status = ?, task_description = ?, task_location = ?, owner_user_id = ?, task_name = ?  where task_id = ?");
 
 			pst.setInt(1, task.getTask_instance_id());
 			pst.setObject(2, task.getTask_start_time());
@@ -372,20 +504,27 @@ public class QueryUtility {
 			pst.setString(6, task.getTask_description());
 			pst.setString(7, task.getTask_location());
 			pst.setInt(8, task.getOwner_user_id());
-			pst.setInt(9, id);
+			pst.setString(9, task.getTask_name());
+			pst.setInt(10, id);
 
 			int rowsAffected = pst.executeUpdate();
 
 			if(rowsAffected > 0) {
 				isSuccessful = true;
+				LogWriterUtility.writeToQueryLogFile("Successfully updated Task in DB:\n" + task.toString());
+				
 			} else {
 				isSuccessful = false;
+				LogWriterUtility.writeToQueryLogFile("Unsuccessfully updated Task in DB:\n" + task.toString());
 			}
 
 		} catch(SQLException sqle) {
 			System.err.println("An issue has occurred updating a task by id in the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with updating task by id from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 
@@ -408,8 +547,11 @@ public class QueryUtility {
 
 			if(rowsAffected > 0) {
 				isSuccessful = true;
+				LogWriterUtility.writeToQueryLogFile("Deleting Task from DB successful.");
+				
 			} else {
 				isSuccessful = false;
+				LogWriterUtility.writeToQueryLogFile("Deleting Task from DB unsuccessful.");
 			}
 
 
@@ -417,6 +559,9 @@ public class QueryUtility {
 			System.err.println("An issue has occurred deleting a task from the DB: " + sqle.getMessage());
 			System.err.println("Printing Stack Trace\n" );
 			sqle.printStackTrace();
+			
+			LogWriterUtility.writeToQueryLogFile("An issue has occured with deleting task by id from the DB: " + sqle.getMessage() +"\n" +
+					"Printing Stack Trace.\n" + sqle.getStackTrace().toString());
 		}
 
 

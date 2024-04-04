@@ -1,0 +1,51 @@
+package com.isaiah.utilities;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.LocalDateTime;
+
+public class LogWriterUtility {
+	
+	final static private Path LogDirectory = Paths.get("logs/");
+	final static private Path DatabaseLogDirectory = Paths.get(LogDirectory + "database/");
+	final static private Path QueryLogDirectory = Paths.get(LogDirectory + "query/");
+	
+	
+	
+	
+	public static void writeToFile() { 
+		
+	}
+	
+	/*
+	 * 
+	 */
+	public static void createDBLogFile() {
+		//Sample DBLogFileName: Database-2024-02-23
+		String todayFileName = "Database-" + LocalDate.now().toString() + ".txt";
+		Path TodayDBFilepath = DatabaseLogDirectory.resolve(todayFileName);
+		
+		
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		System.out.println(Instant.now());
+		
+		LocalDate currDate = LocalDate.now();
+		LocalTime currTime = LocalTime.now();
+		LocalDateTime currDateTime = LocalDateTime.now();
+		
+		System.out.println("currDate: " + currDate.toString() + "\n"
+				+ "currTime: " + currTime + "\n" 
+				+ "currDateTime: " + currDateTime);
+	}
+	
+	
+
+}

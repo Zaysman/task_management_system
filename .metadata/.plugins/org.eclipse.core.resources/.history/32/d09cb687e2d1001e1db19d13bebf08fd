@@ -1,0 +1,28 @@
+package com.isaiah.utilities;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDate;
+
+public class LogWriterUtility {
+	
+	final static private Path LogDirectory = Paths.get("logs/");
+	final static private Path DatabaseLogDirectory = Paths.get(LogDirectory + "database/");
+	final static private Path QueryLogDirectory = Paths.get(LogDirectory + "query/");
+	
+	
+	
+	
+	public static void writeToFile() { 
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		System.out.println(Instant.now());
+		
+		
+	}
+
+}

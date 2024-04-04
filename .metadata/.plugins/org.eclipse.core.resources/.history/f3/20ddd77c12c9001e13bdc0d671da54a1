@@ -1,9 +1,0 @@
-/*
- * User object to hold data from DB
- */
-
-package com.isaiah.objects;
-
-public class User {
-
-}
