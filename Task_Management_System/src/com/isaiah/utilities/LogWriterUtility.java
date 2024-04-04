@@ -119,6 +119,7 @@ public class LogWriterUtility {
 			}
 		} else {
 			createDBLogFile();
+			writeToDBLogFile(str);
 		}	
 	}
 	
@@ -138,6 +139,7 @@ public class LogWriterUtility {
 			}
 		} else {
 			createQueryLogFile();
+			writeToQueryLogFile(str);
 		}
 		
 	}
@@ -147,7 +149,7 @@ public class LogWriterUtility {
 	}
 	
 	private static String getLogFileTimeStamp() {
-		return "[" + LocalTime.now().toString() + "]";
+		return "[" + LocalTime.now().toString() + "] ";
 	}
 	
 	public static void main(String[] args) {

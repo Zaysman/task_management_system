@@ -1,0 +1,13 @@
+[20:27:46.380429700] User successfully retrieved from DB by username.
+User [id=17, username=zaysman, password=123As124!]
+[20:27:46.413676600] Successfully acquired all tasks by Owner ID: 17
+[20:27:55.722050900] Successfully retrieved tasks by status 'In Progress' for User: 17
+[20:27:56.781035] Successfully retrieved tasks by status 'Completed' for User: 17
+[20:27:57.701046] Successfully retrieved tasks by status 'Failed' for User: 17
+[20:27:58.986061800] Successfully retrieved tasks by status 'To Reschedule' for User: 17
+[20:27:59.628709300] Successfully retrieved tasks by status 'Archived' for User: 17
+[20:28:00.712315300] Successfully acquired all tasks by Owner ID: 17
+[20:30:13.755060700] Successfully acquired TaskID AutoIncrement Value: 34
+[20:30:13.763611300] Successfully acquired TaskID AutoIncrement Value: 34
+[20:30:13.776232200] Successfully created Task in DB:
+Task [task_id=34, task_instance_id=0, owner_user_id=17, task_name=Don't read me, task_status=In Progress, task_description=You shouldn't be reading this., task_location=Somewhere, task_start_time=2024-04-03T08:29, task_end_time=2024-05-03T08:29, task_due_date=2024-04-03T20:30:13.743316300]

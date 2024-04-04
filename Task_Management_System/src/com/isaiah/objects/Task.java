@@ -21,7 +21,10 @@ unique(task_instance_id)
 
 package com.isaiah.objects;
 
+import com.isaiah.enums.taskStatusEnum;
+
 import java.time.*;
+
 
 public class Task {
 
@@ -105,7 +108,25 @@ public class Task {
 	public void setTask_status(String task_status) {
 		this.task_status = task_status;
 	}
-
+	
+	public void setTask_status(int val) {
+		
+		switch(val) {
+		case 1: this.task_status = taskStatusEnum.INPROGRESS.getStatusString();
+		break;
+		case 2: this.task_status = taskStatusEnum.COMPLETED.getStatusString();
+		break;
+		case 3: this.task_status = taskStatusEnum.FAILED.getStatusString();
+		break;
+		case 4: this.task_status = taskStatusEnum.TORESCHEDULE.getStatusString();
+		break;
+		case 5: this.task_status = taskStatusEnum.ARCHIVED.getStatusString();
+		break;
+		default: this.task_status = taskStatusEnum.INPROGRESS.getStatusString();
+		break;	
+		}
+	}
+ 
 	public void setTask_description(String task_description) {
 		this.task_description = task_description;
 	}
